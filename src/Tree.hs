@@ -29,6 +29,14 @@ printDescendent :: Tree node ->[node]
 printDescendent Null = []
 printDescendent (Branch value left right) = (printDescendent right) ++ [value] ++ (printDescendent left)
 
+--function that inserts a node
+insertNode :: (Eq node, Ord node) => Tree node -> node -> Tree node
+insertNode Null node = Branch node Null Null
+insertNode (Branch node left right) newNode
+	| newNode == node = Null
+	| newNode < node = (Branch node (insertNode left newNode) right)
+	| otherwise = (Branch node left (insertNode right newNode))
+
 
 
 
