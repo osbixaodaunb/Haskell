@@ -9,6 +9,7 @@ data Vertex = Vertex {
      weight :: Float
      }
      deriving(Show)
+
 type Graph = [Vertex]
 
 createNodes 0 = []
