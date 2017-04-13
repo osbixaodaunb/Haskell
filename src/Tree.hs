@@ -46,3 +46,27 @@ height (Branch _ left right) = 1 + max (height left) (height right)
 balance :: Tree node -> Bool
 balance Null = True
 balance (Branch _ left right) = (abs ( (height left) - (height right))) <= 1 && (balance  left) && (balance right)
+
+--rotation to right
+rotationR :: Tree node -> Tree node
+rotationR Null = Null
+rotationR (Branch value1 (Branch value2 value2left value2right) right) = (Branch value2 (value2left)(Branch value1 value2right right));
+
+--rotation to left
+rotationL :: Tree node -> Tree node
+rotationL Null = Null
+rotationL (Branch value1 value1left (Branch value2 value2left value2right)) = (Branch value2 (Branch value1 value1left value2left)(value2right) );
+
+--function to return the balance factor of a node
+balanceFactor :: Tree node -> Int
+balanceFactor Null = 0
+balanceFactor (Branch _ left right) = (height(right) - height(left))
+
+--function to balance a tree
+balanceTree :: Tree node -> Tree node
+balanceTree Null = Null
+balanceTree a = if balanceFactor(a) > 1 
+	then rotationL(a)
+	else  if balanceFactor(a) < -1 
+		then rotationR(a)
+		else a
