@@ -1,4 +1,4 @@
-
+import Debug.Trace
 --data definition of a tree
 
 data Tree node = Null
@@ -37,6 +37,19 @@ insertNode (Branch node left right) newNode
 	| newNode < node = (Branch node (insertNode left newNode) right)
 	| otherwise = (Branch node left (insertNode right newNode))
 
+minimumNode :: Tree node -> node
+minimumNode (Branch node Null _)  = node
+minimumNode (Branch _ left _) = minimumNode left
+
+deleteNode :: (Eq node, Ord node) => Tree node -> node -> Tree node
+deleteNode Null key = Null
+deleteNode (Branch key left Null) _ = left
+deleteNode (Branch key Null right) _  = right
+deleteNode (Branch key' left right) key | key < key' = (Branch key' (deleteNode left key) right)
+deleteNode (Branch key' left right) key | key > key' = (Branch key' left (deleteNode right key))  
+deleteNode (Branch _ left right) _ = (Branch removeNode' left right')
+	where removeNode' = minimumNode right;
+		  right' = deleteNode (right) removeNode'
 --function to check the heigh of a node
 height :: Tree node -> Int
 height Null  = 0
