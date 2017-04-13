@@ -50,11 +50,12 @@ deleteNode (Branch key' left right) key | key > key' = (Branch key' left (delete
 deleteNode (Branch _ left right) _ = (Branch removeNode' left right')
 	where removeNode' = minimumNode right;
 		  right' = deleteNode (right) removeNode'
+--function to check the heigh of a node
+height :: Tree node -> Int
+height Null  = 0
+height (Branch _ left right) = 1 + max (height left) (height right)
 
-
-
-
-
-
-
-
+--function to check if the tree is balenced
+balance :: Tree node -> Bool
+balance Null = True
+balance (Branch _ left right) = (abs ( (height left) - (height right))) <= 1 && (balance  left) && (balance right)
