@@ -75,11 +75,29 @@ balanceFactor :: Tree node -> Int
 balanceFactor Null = 0
 balanceFactor (Branch _ left right) = (height(right) - height(left))
 
+getLeftNode (Branch _ left _) = left
+getRightNode (Branch _ _ right) = right
+getValueNode (Branch x _ _) = x
+
+-- double rotation right left
+rotationRL :: Tree node -> Tree node
+rotationRL Null = Null
+rotationRL (Branch value left right) =rotationL(Branch value (left) (rotationR(right)) )
+
+-- double rotation left right
+rotationLR :: Tree node -> Tree node
+rotationLR Null = Null
+rotationLR (Branch value left right) = rotationR(Branch value (rotationL(left))  (right))
+
 --function to balance a tree
 balanceTree :: Tree node -> Tree node
 balanceTree Null = Null
 balanceTree a = if balanceFactor(a) > 1 
-	then rotationL(a)
-	else  if balanceFactor(a) < -1 
-		then rotationR(a)
+	then if balanceFactor(getRightNode(a)) > 0
+		then rotationL(a)
+		else rotationRL(a)
+	else if balanceFactor(a) < -1 
+		then if balanceFactor(getLeftNode(a)) < 0 
+			then rotationR(a)
+			else rotationLR(a)
 		else a
