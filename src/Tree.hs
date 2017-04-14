@@ -37,19 +37,27 @@ insertNode (Branch node left right) newNode
 	| newNode < node = (Branch node (insertNode left newNode) right)
 	| otherwise = (Branch node left (insertNode right newNode))
 
+-- function that return the left-most node
 minimumNode :: Tree node -> node
 minimumNode (Branch node Null _)  = node
 minimumNode (Branch _ left _) = minimumNode left
 
-deleteNode :: (Eq node, Ord node) => Tree node -> node -> Tree node
-deleteNode Null key = Null
-deleteNode (Branch key left Null) _ = left
-deleteNode (Branch key Null right) _  = right
-deleteNode (Branch key' left right) key | key < key' = (Branch key' (deleteNode left key) right)
-deleteNode (Branch key' left right) key | key > key' = (Branch key' left (deleteNode right key))  
-deleteNode (Branch _ left right) _ = (Branch removeNode' left right')
-	where removeNode' = minimumNode right;
-		  right' = deleteNode (right) removeNode'
+-- function that deletes the root node on a sub-tree
+deleteRoot :: Tree node -> Tree node
+deleteRoot (Branch node Null right) = right
+deleteRoot (Branch node left Null) = left
+deleteRoot (Branch node left right) = (Branch node' left right')
+  where node' = minimumNode right
+        right' = deleteRoot right
+
+-- function that deletes the node' on a sub-tree
+deleteAnyNode :: (Ord node) => Tree node -> node -> Tree node
+deleteAnyNode Null _ = Null
+deleteAnyNode (Branch node left right) node'
+  | node' == node = deleteRoot (Branch node left right)
+  | node' < node = (Branch node (deleteAnyNode left node') right)
+  | otherwise = Branch node left (deleteAnyNode right node')
+
 --function to check the heigh of a node
 height :: Tree node -> Int
 height Null  = 0
